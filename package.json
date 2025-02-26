@@ -1,0 +1,48 @@
+{
+  "name": "zkgit",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "commonjs",
+  "license": "AGPL-version-3.0",
+  "private": false,
+  "engines": {
+    "node": ">= 14.0.0",
+    "npm": ">= 6.0.0"
+  },
+  "homepage": "",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "bugs": "",
+  "keywords": [],
+  "author": {
+    "name": "nithin",
+    "email": "nithdemo@gmail.com",
+    "url": "https://dummyurl.com"
+  },
+  "contributors": [],
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": ""
+  },
+  "dependencies": {
+    "axios": "^1.8.1",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.21.2",
+    "image-downloader": "^4.3.0",
+    "ethers": "^5.7.2",
+    "jsonwebtoken": "^9.0.0",
+    "mime-types": "^2.1.35",
+    "mongoose": "^6.8.3",
+    "multer": "^1.4.5-lts.1",
+    "node-cron": "^3.0.2",
+    "nodemon": "^3.1.9",
+    "siwe": "^2.0.0"
+  }
+}
