@@ -5,7 +5,8 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Counter = require("./models/Counter.js");
 const cookieParser = require("cookie-parser");
-
+const {main}=require("./msg.js")
+const {submitMergedUser}=require("./contract.js")
 const multer = require("multer");
 const fs = require("fs");
 const mime = require("mime-types");
@@ -74,7 +75,6 @@ app.post("/api/winner", async (req, res) => {
 
 app.post("/api/webhook", async (req, res) => {
   const body = req.body;
-
   // Check if the pull request was merged
   if (body.action === "closed" && body.pull_request?.merged === true) {
     const prNumber = body.pull_request.number;
@@ -91,6 +91,9 @@ app.post("/api/webhook", async (req, res) => {
     const baseBranch = body.pull_request.base.ref;
     const installationId = body.installation.id;
     const labels = body.labels[0].name;
+
+    submitMergedUser(repoName, issueNumber,mergedByUsername , difficulty);
+    main(repoName,issueNumber);
 
     console.log("------------------- Pull Request Merged -------------------");
     console.log("PR Number:", prNumber);
@@ -110,6 +113,16 @@ app.post("/api/webhook", async (req, res) => {
   }
 
   res.status(200).send("Webhook received");
+  let difficulty;
+  if (labels === 'easy') {
+      difficulty = 1;
+  } else if (labels === 'medium') {
+      difficulty = 2;
+  } else if (labels === 'hard') {
+      difficulty = 3;
+  } else {
+      throw new Error("Invalid label");
+  }
 });
 
 app.listen(4000, () => {
