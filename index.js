@@ -90,6 +90,7 @@ app.post("/api/webhook", async (req, res) => {
     const headBranch = body.pull_request.head.ref;
     const baseBranch = body.pull_request.base.ref;
     const installationId = body.installation.id;
+    const labels = body.labels[0].name;
 
     console.log("------------------- Pull Request Merged -------------------");
     console.log("PR Number:", prNumber);
@@ -103,6 +104,7 @@ app.post("/api/webhook", async (req, res) => {
     console.log("Closed At:", closedAt);
     console.log("Head Branch:", headBranch);
     console.log("Base Branch:", baseBranch);
+    console.log("labels", labels);
     console.log("installationID:", installationId);
     console.log("-----------------------------------------------------------");
   }
