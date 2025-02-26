@@ -1,45 +1,47 @@
-const express = require('express');
-const cors = require('cors');
+const express = require("express");
+const cors = require("cors");
 const mongoose = require("mongoose");
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const Counter=require("./models/Counter.js");
-const cookieParser = require('cookie-parser');
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const Counter = require("./models/Counter.js");
+const cookieParser = require("cookie-parser");
 
-const multer = require('multer');
-const fs = require('fs');
-const mime = require('mime-types');
-const axios=require('axios');
-require('dotenv').config();
+const multer = require("multer");
+const fs = require("fs");
+const mime = require("mime-types");
+const axios = require("axios");
+require("dotenv").config();
 const app = express();
-require('dotenv').config();
+require("dotenv").config();
 
-const apiKey = '1a119983-8a8a-48ad-96b0-74ba585b313f';
-
+const apiKey = "1a119983-8a8a-48ad-96b0-74ba585b313f";
 
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization",
+  );
   next();
 });
 
-
 app.use(express.json());
 app.use(cookieParser());
-app.use('/uploads', express.static(__dirname+'/uploads'));
-app.use(cors({
-  credentials: true,
-  origin: "http://localhost:3000"
-}));
+app.use("/uploads", express.static(__dirname + "/uploads"));
+app.use(
+  cors({
+    credentials: true,
+    origin: "http://localhost:3000",
+  }),
+);
 
 const mongoUrl = process.env.MONGO_URL;
 
 const connect = async () => {
   try {
-  mongoose.connect(mongoUrl,options)
+    mongoose.connect(mongoUrl, options);
     console.log("Connected to mongoDB!");
-
   } catch (error) {
     console.log(error);
   }
@@ -53,24 +55,68 @@ const options = {
   maxPoolSize: 10, // Maintain up to 10 socket connections
   serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
   socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
-  family: 4 // Use IPv4, skip trying IPv6
-}
+  family: 4, // Use IPv4, skip trying IPv6
+};
 
-app.post('/api/winner', async (req, res) => {
+app.post("/api/winner", async (req, res) => {
   try {
     const { reponame, issueId, winnerUsername } = req.body;
 
     const newIssue = new IssueModel({ reponame, issueId, winnerUsername });
     await newIssue.save();
 
-    res.status(201).json({ message: 'Winner added successfully', newIssue });
+    res.status(201).json({ message: "Winner added successfully", newIssue });
   } catch (err) {
     console.error(err);
-    res.status(500).send('Server Error');
+    res.status(500).send("Server Error");
   }
 });
 
-app.listen(4000,()=>{
-  console.log('hai ',process.env.MONGO_URL)
+app.post("/api/webhook", async (req, res) => {
+  const body = req.body;
+
+  // Check if the pull request was merged
+  if (body.action === "closed" && body.pull_request?.merged === true) {
+    const prNumber = body.pull_request.number;
+    const issueNumber = body.pull_request.number; // Often the same as PR number
+    const mergedByUsername = body.pull_request.merged_by?.login;
+    const repoName = body.repository.name;
+    const repoFullName = body.repository.full_name;
+    const mergedAt = body.pull_request.merged_at;
+    const commitSha = body.pull_request.merge_commit_sha;
+    const prTitle = body.pull_request.title;
+    const prBody = body.pull_request.body;
+    const createdAt = body.pull_request.created_at;
+    const updatedAt = body.pull_request.updated_at;
+    const closedAt = body.pull_request.closed_at;
+    const headBranch = body.pull_request.head.ref;
+    const baseBranch = body.pull_request.base.ref;
+    const installationId = body.installation.id;
+
+    console.log("------------------- Pull Request Merged -------------------");
+    console.log("PR Number:", prNumber);
+    console.log("Issue Number:", issueNumber);
+    console.log("Merged by:", mergedByUsername);
+    console.log("GitHub Repo Name:", repoName);
+    console.log("GitHub Repo Full Name:", repoFullName);
+    console.log("Merged At:", mergedAt);
+    console.log("Merge Commit SHA:", commitSha);
+    console.log("Pull Request Title:", prTitle);
+    console.log("Pull Request Body:", prBody);
+    console.log("Created At:", createdAt);
+    console.log("Updated At:", updatedAt);
+    console.log("Closed At:", closedAt);
+    console.log("Head Branch:", headBranch);
+    console.log("Base Branch:", baseBranch);
+    console.log("installationID:", installationId);
+    console.log("-----------------------------------------------------------");
+  }
+
+  res.status(200).send("Webhook received"); // Respond to the webhook
+});
+
+app.listen(4000, () => {
+  console.log("hai ", process.env.MONGO_URL);
   connect();
-})
+});
+
