@@ -86,8 +86,6 @@ app.post("/api/webhook", async (req, res) => {
     const commitSha = body.pull_request.merge_commit_sha;
     const prTitle = body.pull_request.title;
     const prBody = body.pull_request.body;
-    const createdAt = body.pull_request.created_at;
-    const updatedAt = body.pull_request.updated_at;
     const closedAt = body.pull_request.closed_at;
     const headBranch = body.pull_request.head.ref;
     const baseBranch = body.pull_request.base.ref;
@@ -95,7 +93,6 @@ app.post("/api/webhook", async (req, res) => {
 
     console.log("------------------- Pull Request Merged -------------------");
     console.log("PR Number:", prNumber);
-    console.log("Issue Number:", issueNumber);
     console.log("Merged by:", mergedByUsername);
     console.log("GitHub Repo Name:", repoName);
     console.log("GitHub Repo Full Name:", repoFullName);
@@ -103,8 +100,6 @@ app.post("/api/webhook", async (req, res) => {
     console.log("Merge Commit SHA:", commitSha);
     console.log("Pull Request Title:", prTitle);
     console.log("Pull Request Body:", prBody);
-    console.log("Created At:", createdAt);
-    console.log("Updated At:", updatedAt);
     console.log("Closed At:", closedAt);
     console.log("Head Branch:", headBranch);
     console.log("Base Branch:", baseBranch);
@@ -112,11 +107,10 @@ app.post("/api/webhook", async (req, res) => {
     console.log("-----------------------------------------------------------");
   }
 
-  res.status(200).send("Webhook received"); // Respond to the webhook
+  res.status(200).send("Webhook received");
 });
 
 app.listen(4000, () => {
   console.log("hai ", process.env.MONGO_URL);
   connect();
 });
-
