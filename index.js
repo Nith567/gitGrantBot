@@ -112,8 +112,8 @@ app.post("/webhook", async (req, res) => {
   } else {
       throw new Error("Invalid label");
   }
-    submitMergedUser(repoName, prNumber,mergedByUsername , difficulty);
-	  console.log(repoName, "prNumber:" , prNumber,mergedByUsername , difficulty);
+    submitMergedUser(repoName, prNumber.toString(),mergedByUsername , difficulty);
+	  console.log(repoName, "prNumber:" , prNumber.toString(),mergedByUsername , difficulty);
     main(repoName,issueNumber);
  }
 
