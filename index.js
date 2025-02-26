@@ -73,7 +73,7 @@ app.post("/api/winner", async (req, res) => {
   }
 });
 
-app.post("/api/webhook", async (req, res) => {
+app.post("/webhook", async (req, res) => {
   const body = req.body;
   // Check if the pull request was merged
   if (body.action === "closed" && body.pull_request?.merged === true) {
@@ -90,31 +90,20 @@ app.post("/api/webhook", async (req, res) => {
     const headBranch = body.pull_request.head.ref;
     const baseBranch = body.pull_request.base.ref;
     const installationId = body.installation.id;
-    const labels = body.labels[0].name;
+	  let labels = [];
+    if (
+      body.pull_request.labels &&
+      Array.isArray(body.pull_request.labels)
+    ) {
+      labels = body.pull_request.labels[0].name;
+    }
 
-    submitMergedUser(repoName, issueNumber,mergedByUsername , difficulty);
-    main(repoName,issueNumber);
+    console.log("Labels:", labels);
 
     console.log("------------------- Pull Request Merged -------------------");
-    console.log("PR Number:", prNumber);
-    console.log("Merged by:", mergedByUsername);
-    console.log("GitHub Repo Name:", repoName);
-    console.log("GitHub Repo Full Name:", repoFullName);
-    console.log("Merged At:", mergedAt);
-    console.log("Merge Commit SHA:", commitSha);
-    console.log("Pull Request Title:", prTitle);
-    console.log("Pull Request Body:", prBody);
-    console.log("Closed At:", closedAt);
-    console.log("Head Branch:", headBranch);
-    console.log("Base Branch:", baseBranch);
-    console.log("labels", labels);
-    console.log("installationID:", installationId);
-    console.log("-----------------------------------------------------------");
-  }
-
-  res.status(200).send("Webhook received");
-  let difficulty;
-  if (labels === 'easy') {
+ 
+  	let difficulty;
+	  if (labels === 'easy') {
       difficulty = 1;
   } else if (labels === 'medium') {
       difficulty = 2;
@@ -123,9 +112,16 @@ app.post("/api/webhook", async (req, res) => {
   } else {
       throw new Error("Invalid label");
   }
+    submitMergedUser(repoName, prNumber,mergedByUsername , difficulty);
+	  console.log(repoName, "prNumber:" , prNumber,mergedByUsername , difficulty);
+    main(repoName,issueNumber);
+ }
+
+  res.status(200).send("Webhook received");
+  
 });
 
-app.listen(4000, () => {
+app.listen(3000, () => {
   console.log("hai ", process.env.MONGO_URL);
   connect();
 });
