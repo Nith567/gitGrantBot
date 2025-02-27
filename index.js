@@ -5,8 +5,8 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Counter = require("./models/Counter.js");
 const cookieParser = require("cookie-parser");
-const {main}=require("./msg.js")
-const {submitMergedUser}=require("./contract.js")
+const { main } = require("./msg.js");
+const { submitMergedUser } = require("./contract.js");
 const multer = require("multer");
 const fs = require("fs");
 const mime = require("mime-types");
@@ -75,7 +75,6 @@ app.post("/api/winner", async (req, res) => {
 
 app.post("/webhook", async (req, res) => {
   const body = req.body;
-  // Check if the pull request was merged
   if (body.action === "closed" && body.pull_request?.merged === true) {
     const prNumber = body.pull_request.number;
     const issueNumber = body.pull_request.number; // Often the same as PR number
@@ -90,35 +89,37 @@ app.post("/webhook", async (req, res) => {
     const headBranch = body.pull_request.head.ref;
     const baseBranch = body.pull_request.base.ref;
     const installationId = body.installation.id;
-	  let labels = [];
-    if (
-      body.pull_request.labels &&
-      Array.isArray(body.pull_request.labels)
-    ) {
+    let labels = [];
+    if (body.pull_request.labels && Array.isArray(body.pull_request.labels)) {
       labels = body.pull_request.labels[0].name;
     }
 
     console.log("Labels:", labels);
 
     console.log("------------------- Pull Request Merged -------------------");
- 
-  	let difficulty;
-	  if (labels === 'easy') {
+
+    let difficulty;
+    if (labels === "easy") {
       difficulty = 1;
-  } else if (labels === 'medium') {
+    } else if (labels === "medium") {
       difficulty = 2;
-  } else if (labels === 'hard') {
+    } else if (labels === "hard") {
       difficulty = 3;
-  } else {
+    } else {
       throw new Error("Invalid label");
+    }
+
+    submitMergedUser(
+      repoName,
+      prNumber.toString(),
+      mergedByUsername,
+      difficulty,
+    );
+
+    main(mergedByUsername, repoName, issueNumber, installationId);
   }
-    submitMergedUser(repoName, prNumber.toString(),mergedByUsername , difficulty);
-	  console.log(repoName, "prNumber:" , prNumber.toString(),mergedByUsername , difficulty);
-    main(repoName,issueNumber);
- }
 
   res.status(200).send("Webhook received");
-  
 });
 
 app.listen(3000, () => {

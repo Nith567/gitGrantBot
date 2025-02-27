@@ -1,7 +1,6 @@
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
 
-
 const APP_ID = "1154651";
 const PRIVATE_KEY = `-----BEGIN RSA PRIVATE KEY-----
 MIIEpAIBAAKCAQEAoRGRjfGeuD3OpAtVNCXhGh28LLpkTm0ACgFCYD8XneJYtkPd
@@ -30,13 +29,6 @@ yHPqQQKBgQCx1dTADPj2OwBhkDf8j0vek8tkzLt5ZFHUIFJS1C+Ta1XoQa+uhlY4
 0vkF3/DOwKnTQWC8W1Emgv+8IvrFYoBU1bbrwt5lAq0Our5WNsvLbsuECQd9zELE
 tUu5kpYi45HSZH1pdPZHfi6LQcI6N4r321zcW9VRw5S9Go39B9Jwsg==
 -----END RSA PRIVATE KEY-----`;
-
-const INSTALLATION_ID = "61723257";
-const REPOSITORY_OWNER = "Nith567";
-const REPOSITORY_NAME = "demoPr";
-
-const PULL_REQUEST_NUMBER = 12;
-
 
 // Function to generate a JWT (JSON Web Token)
 function generateJWT(appId, privateKey) {
@@ -119,18 +111,17 @@ async function addCommentToPullRequest(
       `Failed to add comment: ${error.response?.status} - ${error.response?.data}`,
     );
   }
-
 }
 
- async function main(repoId,issueId) {
+async function main(username, repoName, issueId, INSTALLATION_ID) {
   try {
     if (
       !APP_ID ||
       !PRIVATE_KEY ||
-      !INSTALLATION_ID ||
-      !REPOSITORY_OWNER ||
-      !REPOSITORY_NAME ||
-      !PULL_REQUEST_NUMBER
+      !username ||
+      !repoName ||
+      !issueId ||
+      !INSTALLATION_ID
     ) {
       throw new Error("Missing required environment variables.");
     }
@@ -141,17 +132,16 @@ async function addCommentToPullRequest(
       INSTALLATION_ID,
     );
 
-    const comment =
-      `Testing ,Claim rewards through reclaimProtocol! https://claim-demo/${repoId}/${issueId}`;
+    const comment = `Testing ,Claim rewards through reclaimProtocol! https://claim-demo/${repoId}/${issueId}`;
 
     await addCommentToPullRequest(
-      REPOSITORY_OWNER,
-      REPOSITORY_NAME,
-      PULL_REQUEST_NUMBER,
+      username,
+      repoName,
+      issueId,
       comment,
       accessToken,
     );
- //
+    //
   } catch (error) {
     console.error("Error:", error.message);
     if (error.errors) {
@@ -160,4 +150,4 @@ async function addCommentToPullRequest(
   }
 }
 
- module.exports={main}
+module.exports = { main };
