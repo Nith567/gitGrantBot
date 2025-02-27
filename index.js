@@ -100,11 +100,11 @@ app.post("/webhook", async (req, res) => {
 
     let difficulty;
     if (labels === "easy") {
-      difficulty = 1;
+      difficulty = 0;
     } else if (labels === "medium") {
-      difficulty = 2;
+      difficulty = 1;
     } else if (labels === "hard") {
-      difficulty = 3;
+      difficulty = 2;
     } else {
       throw new Error("Invalid label");
     }
