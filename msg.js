@@ -132,7 +132,7 @@ async function main(username, repoName, issueId, INSTALLATION_ID) {
       INSTALLATION_ID,
     );
 
-    const comment = `Testing ,Claim rewards through reclaimProtocol! https://claim-demo/${repoId}/${issueId}`;
+    const comment = `Testing ,Claim rewards through reclaimProtocol! https://claim-demo/${repoName}/${issueId}`;
 
     await addCommentToPullRequest(
       username,
