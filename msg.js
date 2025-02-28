@@ -113,7 +113,7 @@ async function addCommentToPullRequest(
   }
 }
 
-async function main(username, repoName, issueId, INSTALLATION_ID) {
+async function main(username, repoName, issueId, INSTALLATION_ID, contributor) {
   try {
     if (
       !APP_ID ||
@@ -132,7 +132,7 @@ async function main(username, repoName, issueId, INSTALLATION_ID) {
       INSTALLATION_ID,
     );
 
-    const comment = `@${username} Claim your bounty rewards through this url by proving your github username using zkTLS!
+    const comment = `@${contributor} Claim your bounty rewards through this url by proving your github username using zkTLS!
                      https://zkgitreward.vercel.app/claim/${username}/${repoName}/${issueId}`;
 
     await addCommentToPullRequest(

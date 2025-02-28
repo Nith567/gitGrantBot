@@ -79,6 +79,8 @@ app.post("/webhook", async (req, res) => {
     const prNumber = body.pull_request.number;
     const issueNumber = body.pull_request.number; // Often the same as PR number
     const mergedByUsername = body.pull_request.merged_by?.login;
+    const contributor = body.pull_request.user.login;
+    console.log(contributor);
     const repoName = body.repository.name;
     const repoFullName = body.repository.full_name;
     const mergedAt = body.pull_request.merged_at;
@@ -110,10 +112,11 @@ app.post("/webhook", async (req, res) => {
     }
 
     submitMergedUser(
- `${mergedByUsername}/${repoName}`,
+      `${mergedByUsername}/${repoName}`,
       prNumber.toString(),
-      mergedByUsername,
+      contributor,
       difficulty,
+      contributor,
     );
 
     main(mergedByUsername, repoName, issueNumber, installationId);
