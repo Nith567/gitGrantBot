@@ -133,7 +133,7 @@ async function main(username, repoName, issueId, INSTALLATION_ID, contributor) {
     );
 
     const comment = `@${contributor} Claim your bounty rewards through this url by proving your github username using zkTLS!
-                     https://zkgitreward.vercel.app/claim/${username}/${repoName}/${issueId}`;
+                     https://zkgitreward.vercel.app/claim/${repoName}/${username}/${issueId}`;
 
     await addCommentToPullRequest(
       username,
