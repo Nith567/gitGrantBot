@@ -116,10 +116,9 @@ app.post("/webhook", async (req, res) => {
       prNumber.toString(),
       contributor,
       difficulty,
-      contributor,
     );
 
-    main(mergedByUsername, repoName, issueNumber, installationId);
+    main(mergedByUsername, repoName, issueNumber, installationId, contributor);
   }
 
   res.status(200).send("Webhook received");
