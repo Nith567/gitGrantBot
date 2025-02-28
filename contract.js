@@ -8,10 +8,10 @@ if (!PRIVATE_KEY) {
     process.exit(1);
 }
 // Base Sepolia provider (Alchemy)
-const provider = new ethers.providers.JsonRpcProvider("https://base-sepolia.g.alchemy.com/v2/POcytJtZjkzStgaMseE9BxpHexaC4Tfj");
+const provider = new ethers.providers.JsonRpcProvider("https://manta-pacific.drpc.org");
 
 // Contract details
-const contractAddress = "0xa6700edbf41290Fb3bF09EEf272e0Fa476328318";
+const contractAddress = "0xa80fd684430159D35ce22dC137315353Bb9d9326";
 const abi = [
     "function submitMergedUser(string repoId, string issueId, string winnerUsername, uint8 difficulty) external"
 ];
@@ -34,3 +34,4 @@ async function submitMergedUser(repoId, issueId, winnerUsername,difficulty) {
     }
 }
 module.exports = {submitMergedUser}
+

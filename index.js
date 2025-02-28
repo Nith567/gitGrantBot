@@ -110,7 +110,7 @@ app.post("/webhook", async (req, res) => {
     }
 
     submitMergedUser(
-      repoName,
+ `${mergedByUsername}/${repoName}`,
       prNumber.toString(),
       mergedByUsername,
       difficulty,
